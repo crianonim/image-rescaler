@@ -5,7 +5,7 @@ const im = require('imagemagick');
 const fs=require('fs');
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Permutator' });
 });
 router.post('/',(req,res)=>{
   console.log("FILES",req.files)
