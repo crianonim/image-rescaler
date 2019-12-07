@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const path= require('path')
+const path= require('path');
+const im = require('imagemagick');
 const fs=require('fs');
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -14,10 +15,16 @@ router.post('/',(req,res)=>{
   console.log(fs.readFile(filePath,(err,data)=>{
     console.log("Err",err);
     console.log("Data",data);
-    res.download(filePath,(err)=>{
-      fs.unlinkSync(filePath);
+    const dstPath="Perm-"+req.files.upl.name;
+    im.convert([filePath,'-scale', '928', '-contrast-stretch', '0.1x0.2',  '-unsharp','0x0.3',dstPath],(err,stdout)=>{
+      console.log("IM error",err);
+      console.log("IM out",stdout);
+      res.download(dstPath,(err)=>{
+        fs.unlinkSync(filePath);
+        fs.unlinkSync(dstPath);
 
-    });
+      });
+    })
   }))
 })
 
