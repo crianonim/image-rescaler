@@ -3,4 +3,8 @@ extends layout
 block content
   form(action="/",method="post",enctype="multipart/form-data")
    input(type="file",name="upl",accept="image/*")
+   span width (default 928)
+   input(name="width",value="928")
+   span unsharp (0.3)
+   input(name="unsharp",value="0.3")
    input(type="submit")

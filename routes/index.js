@@ -5,11 +5,13 @@ const im = require('imagemagick');
 const fs=require('fs');
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Permutator' });
+  res.render('index', { title: 'Permutator v3 updated 09-12-2019' });
 });
 router.post('/',(req,res)=>{
   console.log("FILES",req.files)
   console.log("body",req.body)
+  const width=req.body.width||"928"; // todo make function that will not throw
+  const unsharp="0x"+(req.body.unsharp||"0.3")
   const filePath=path.join(__dirname,'..',req.files.upl.tempFilePath)
   console.log(filePath)
   console.log(fs.readFile(filePath,(err,data)=>{
@@ -17,7 +19,7 @@ router.post('/',(req,res)=>{
     console.log("Data",data);
     const dstPath="Perm-"+req.files.upl.name;
     //im.convert([filePath,'-scale', '928', '-contrast-stretch', '0.1x0.2',  '-unsharp','0x0.3',dstPath],(err,stdout)=>{
-    im.convert([filePath,'-scale', '928','-unsharp','0x0.3',dstPath],(err,stdout)=>{
+    im.convert([filePath,'-scale', width,'-unsharp',unsharp,dstPath],(err,stdout)=>{
       console.log("IM error",err);
       console.log("IM out",stdout);
       res.download(dstPath,(err)=>{
