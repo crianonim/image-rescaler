@@ -4,3 +4,9 @@ input[type="file"] {
 	width:100%;
 	background:pink;
 }
+body {
+	font-family: sans-serif;
+}
+input {
+	font-size: 1em;
+}
