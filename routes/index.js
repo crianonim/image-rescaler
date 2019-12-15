@@ -17,9 +17,11 @@ router.post('/',(req,res)=>{
   console.log(fs.readFile(filePath,(err,data)=>{
     console.log("Err",err);
     console.log("Data",data);
+    const gs=req.body.gs?['-contrast-stretch','0.1x0.2']:[]
+    console.log(gs);
     const dstPath=(req.body.prefix||"Perm-")+req.files.upl.name;
     //im.convert([filePath,'-scale', '928', '-contrast-stretch', '0.1x0.2',  '-unsharp','0x0.3',dstPath],(err,stdout)=>{
-    im.convert([filePath,'-scale', width,'-unsharp',unsharp,dstPath],(err,stdout)=>{
+    im.convert([filePath,'-scale', width,'-unsharp',unsharp,...gs,dstPath],(err,stdout)=>{
       console.log("IM error",err);
       console.log("IM out",stdout);
       res.download(dstPath,(err)=>{
