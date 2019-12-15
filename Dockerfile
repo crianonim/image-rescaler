@@ -1,5 +1,4 @@
-FROM ubuntu
-RUN apt-get update && apt-get install -y imagemagick nodejs npm
+FROM gcr.io/pmttr-261321/node-imagemagic
 WORKDIR /usr/src/
 COPY . .
 RUN npm install
