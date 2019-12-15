@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const sharp=require('sharp');
 const path= require('path');
 const im = require('imagemagick');
 const fs=require('fs');
@@ -21,9 +22,13 @@ router.post('/',(req,res)=>{
     console.log(gs);
     const dstPath=(req.body.prefix||"Perm-")+req.files.upl.name;
     //im.convert([filePath,'-scale', '928', '-contrast-stretch', '0.1x0.2',  '-unsharp','0x0.3',dstPath],(err,stdout)=>{
-    im.convert([filePath,'-scale', width,'-unsharp',unsharp,...gs,dstPath],(err,stdout)=>{
+    // im.convert([filePath,'-scale', width,'-unsharp',unsharp,...gs,dstPath],(err,stdout)=>{
+      sharp(filePath)
+       .resize(Number(width))
+       .toFile(dstPath,(err)=>{
+       
       console.log("IM error",err);
-      console.log("IM out",stdout);
+      console.log("IM out");
       res.download(dstPath,(err)=>{
         fs.unlinkSync(filePath);
         fs.unlinkSync(dstPath);
