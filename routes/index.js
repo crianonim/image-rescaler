@@ -17,7 +17,7 @@ router.post('/',(req,res)=>{
   console.log(fs.readFile(filePath,(err,data)=>{
     console.log("Err",err);
     console.log("Data",data);
-    const dstPath="Perm-"+req.files.upl.name;
+    const dstPath=(req.body.prefix||"Perm-")+req.files.upl.name;
     //im.convert([filePath,'-scale', '928', '-contrast-stretch', '0.1x0.2',  '-unsharp','0x0.3',dstPath],(err,stdout)=>{
     im.convert([filePath,'-scale', width,'-unsharp',unsharp,dstPath],(err,stdout)=>{
       console.log("IM error",err);
