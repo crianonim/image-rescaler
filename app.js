@@ -6,9 +6,10 @@ var logger = require('morgan');
 const fileUpload = require('express-fileupload');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
+const zdtrackerapi=require('./routes/api/zdtracker');
 var app = express();
-
+const cors=require('cors')
+app.use(cors())
 app.use(fileUpload({
     useTempFiles : true,
     tempFileDir : './tmp/',
@@ -28,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
+app.use('/api/zdtracker',zdtrackerapi)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));
