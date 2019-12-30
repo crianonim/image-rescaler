@@ -9,5 +9,54 @@ router.post('/',(req,res)=>{
     db.run(`INSERT INTO pageview_events(user_id,timestamp,title) VALUES ('${id}',${timestamp},'${title}')`)
     res.json(req.body);
 })
+router.get('/events',(req,res)=>{
+    db.all("SELECT * FROM pageview_events order by timestamp DESC",(err,rows)=>{
+        if (err) {console.log(err);
+            res.json(err);
+        }
+        if (rows) {
+            const now=Date.now();
+            console.log(rows);
+            rows.map(row=>{
+                row.date=new Date(row.timestamp).toUTCString()   
+                row.ago=(now-row.timestamp)/1000/60
+            });
+            res.json(rows);
 
+        }
+    })
+})
+
+router.get('/users',(req,res)=>{
+    db.all("select distinct user_id from pageview_events ",(err,rows)=>{
+        if (err) {console.log(err);
+            res.json(err);
+        }
+        if (rows) {
+            const now=Date.now();
+            console.log(rows);
+           
+            res.json(rows);
+
+        }
+    })
+})
+router.get('/user/:id',(req,res)=>{
+    console.log(req.params.id)
+    db.all(`SELECT * FROM pageview_events WHERE user_id='${req.params.id}' order by timestamp DESC`,(err,rows)=>{
+        if (err) {console.log(err);
+            res.json(err);
+        }
+        if (rows) {
+            const now=Date.now();
+            console.log(rows);
+            rows.map(row=>{
+                row.date=new Date(row.timestamp).toUTCString()   
+                row.ago=(now-row.timestamp)/1000/60
+            });
+            res.json(rows);
+
+        }
+    })
+})
 module.exports = router;
