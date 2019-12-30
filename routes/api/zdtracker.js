@@ -10,7 +10,14 @@ router.post('/',(req,res)=>{
     res.json(req.body);
 })
 router.get('/events',(req,res)=>{
-    db.all("SELECT * FROM pageview_events order by timestamp DESC",(err,rows)=>{
+    const timeRestrictions=[];
+    if (req.query.before) timeRestrictions.push("timestamp<"+req.query.before);
+    if (req.query.after) timeRestrictions.push("timestamp>"+req.query.after);
+
+    const before=timeRestrictions.length?"WHERE " +timeRestrictions.join(" AND "):"";
+    const sql=`SELECT * FROM pageview_events ${before} order by timestamp DESC`
+    console.log("SQL",sql)
+    db.all(sql,(err,rows)=>{
         if (err) {console.log(err);
             res.json(err);
         }
@@ -21,8 +28,19 @@ router.get('/events',(req,res)=>{
                 row.date=new Date(row.timestamp).toUTCString()   
                 row.ago=(now-row.timestamp)/1000/60
             });
-            res.json(rows);
-
+            const sorted=[];
+            rows.map(row=>{
+                const user=sorted.find(user=>user.user_id===row.user_id);
+                console.log("USER",user);
+                if (!user){
+                    sorted.push({user_id:row.user_id,events:[row]})
+                } else {
+                    user.events.push(row);
+                }
+                console.log("Sorted",sorted)
+            })
+            if (req.query.groupByUser) res.json(sorted);
+            else res.json(rows)
         }
     })
 })
