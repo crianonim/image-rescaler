@@ -1,0 +1,16 @@
+footer {
+  font-size: 10px;
+  padding-top: 20px;
+}
+.data {
+  color: #363;
+  padding-left: 6px;
+}
+.trackero-users {
+  font-size: smaller;
+  margin-block-start: 0;
+  padding-inline-start: 0;
+}
+.trackero-articles {
+  padding-inline-start: 1.5em;
+}
