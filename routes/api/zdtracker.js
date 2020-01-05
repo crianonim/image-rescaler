@@ -5,6 +5,7 @@ var db = new sqlite3.Database('tracker.db');
 const uuid=require('uuid');
 const aliases={};
 const users=[];
+// TODO make above in DB
 db.run("CREATE TABLE IF NOT EXISTS pageview_events (id INTEGER PRIMARY KEY, user_id TEXT NOT NULL, timestamp INTEGER NOT NULL, title TEX)");
 router.post('/',(req,res)=>{
     console.log("BODY",req.body);
