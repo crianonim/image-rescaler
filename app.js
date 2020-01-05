@@ -9,7 +9,14 @@ var usersRouter = require('./routes/users');
 const zdtrackerapi=require('./routes/api/zdtracker');
 var app = express();
 const cors=require('cors')
-app.use(cors())
+// app.use(cors())
+app.use(cors({
+    origin: function(origin, callback){
+      return callback(null, true);
+    },
+    optionsSuccessStatus: 200,
+    credentials: true
+  }));
 app.use(fileUpload({
     useTempFiles : true,
     tempFileDir : './tmp/',

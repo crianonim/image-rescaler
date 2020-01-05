@@ -2,15 +2,47 @@ var express = require('express');
 var router = express.Router();
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('tracker.db');
+const uuid=require('uuid');
+const aliases={};
+const users=[];
 db.run("CREATE TABLE IF NOT EXISTS pageview_events (id INTEGER PRIMARY KEY, user_id TEXT NOT NULL, timestamp INTEGER NOT NULL, title TEX)");
 router.post('/',(req,res)=>{
     console.log("BODY",req.body);
-    const {id,title,timestamp}=req.body;
-    db.run(`INSERT INTO pageview_events(user_id,timestamp,title) VALUES ('${id}',${timestamp},'${title}')`)
-    res.json(req.body);
+    console.log("COOK",req.cookies);
+    const trackero_cookie=req.cookies.trackero;
+    let user_id=req.body.user_id
+    if (trackero_cookie){
+        console.log("We have a cookie", trackero_cookie);
+        if (user_id){
+            console.log("AND We have user id",user_id);
+        } else {
+            user_id=aliases[trackero_cookie];
+            console.log("Cookie is an alias for user",user_id);
+        }
+        res.cookie("trackero",trackero_cookie,{domain:".perm.com",maxAge:1000*60*60*24*90})
+    } else {
+        console.log("No cookie")
+        const newCookie="cookie-"+uuid();
+        if (user_id){
+            console.log("but there was user_id",user_id);
+            aliases[newCookie]=user_id;
+        } else {
+            user_id=uuid();
+            
+            users.push(user_id);
+            aliases[newCookie]=user_id;
+        }
+        res.cookie("trackero",newCookie,{domain:".perm.com",maxAge:1000*60*60*24*90})
+
+    }
+    console.log("USers",users)
+    
+    db.run(`INSERT INTO pageview_events(user_id,timestamp,title) VALUES ('${user_id}',${timestamp},'${title}')`)
+    res.json({user_id});
 })
 router.get('/events',(req,res)=>{
     const timeRestrictions=[];
+    
     if (req.query.before) timeRestrictions.push("timestamp<"+req.query.before);
     if (req.query.after) timeRestrictions.push("timestamp>"+req.query.after);
 

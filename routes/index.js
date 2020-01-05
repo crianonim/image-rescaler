@@ -5,6 +5,17 @@ const im = require('imagemagick');
 const fs=require('fs');
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  console.log("We have",req.cookies);
+
+  if (req.cookies.trackero){
+    const ck=req.cookies.trackero
+    console.log("There is a cookie trackero",ck);
+    res.cookie("trackero",ck,{domain:".perm.com",maxAge:1000*60*60})
+    
+  } else {
+    console.log("NO cookie!")
+    res.cookie("trackero",Date.now(),{domain:".perm.com",maxAge:1000*60*60})
+  }
   res.render('index', { title: 'Permutator v5 updated 17-12-2019' });
 });
 router.post('/',(req,res)=>{
